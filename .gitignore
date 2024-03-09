@@ -1,0 +1,11 @@
+# Ignore vi swap files
+.*.swp
+
+# Ignore compiled Python files
+*.pyc
+
+# Ignore log files
+*.log
+
+# Ignore sensitive configuration files
+config.ini
