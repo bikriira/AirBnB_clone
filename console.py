@@ -22,7 +22,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             new_instance = BaseModel()
             new_instance.save()
-            print(new_instance.id)            
+            print(new_instance.id)
 
     def do_show(self, line):
         """Prints the string representation of an instance,
@@ -52,7 +52,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif inputs[0] != "BaseModel":
             print("** class doesn't exist **")
-        elif len(inputs) < 2: 
+        elif len(inputs) < 2:
             print("** instance id missing **")
         elif f"{inputs[0]}.{inputs[1]}" not in storage.objects:
             print("** no instance found **")
@@ -87,7 +87,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif inputs[0] != "BaseModel":
             print("** class doesn't exist **")
-        elif len(inputs) < 2: 
+        elif len(inputs) < 2:
             print("** instance id missing **")
         elif f"{inputs[0]}.{inputs[1]}" not in storage.objects:
             print("** no instance found **")
@@ -100,7 +100,7 @@ class HBNBCommand(cmd.Cmd):
             obj = BaseModel(**obj_dict_repr)
             try:
                 curr_value = getattr(obj, f"{inputs[2]}")
-                setattr(obj, f"{inputs[3]}", type(curr_value)(inputs[3]))
+                setattr(obj, f"{inputs[2]}", type(curr_value)(inputs[3]))
             except AttributeError:
                 setattr(obj, f"{inputs[2]}", (inputs[3]))
             self.do_destroy(f"{inputs[0]} {obj.id}")
