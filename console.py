@@ -65,19 +65,16 @@ class HBNBCommand(cmd.Cmd):
         from models import storage
 
         inputs = shlex.split(line)
-        looped = False
         str_list = []
-        if len(inputs) == 0:
-            print("** class name missing **")
-        elif inputs[0] != "BaseModel":
+        class_name = inputs[0] if inputs else "BaseModel"
+
+        if class_name != "BaseModel":
             print("** class doesn't exist **")
         else:
             for key, value in storage.all().items():
-                looped = True
                 obj = BaseModel(**value)
                 str_list.append(str(obj))
-            if looped:
-                print(str_list)
+            print(str_list)
 
     def do_update(self, line):
         from models import storage
