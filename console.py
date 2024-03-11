@@ -132,8 +132,10 @@ class HBNBCommand(cmd.Cmd):
             # Extract the class name
             class_name = line.split('.')[0]
             # Modify the line to call a custom method
-            modified_line = f"all {class_name}"
-            return modified_line
+            return f"all {class_name}"
+        elif line.endswith(".count()"):
+            class_name = line.split('.')[0]
+            return f"count {class_name}"
         else:
             return line
 
@@ -148,6 +150,14 @@ class HBNBCommand(cmd.Cmd):
     def do_quit(self, line):
         """Usually Ctrl+D on Unix-like systems and Ctrl+Z on Windows"""
         return True
+
+    def do_count(self, line):
+        from models import storage
+        count = 0
+        for key, value in storage.objects.items():
+            if (value["__class__"] == line):
+                count += 1
+        print(count)
 
 
 if __name__ == '__main__':
