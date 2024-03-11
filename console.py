@@ -126,6 +126,17 @@ class HBNBCommand(cmd.Cmd):
             storage.new(obj)
             obj.save()
 
+    def precmd(self, line):
+        """Play with user input before onecmd() even know """
+        if line.endswith('.all()'):
+            # Extract the class name
+            class_name = line.split('.')[0]
+            # Modify the line to call a custom method
+            modified_line = f"all {class_name}"
+            return modified_line
+        else:
+            return line
+
     def emptyline(self):
         """Handle an empty line input"""
         pass
