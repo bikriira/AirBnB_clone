@@ -10,7 +10,10 @@ class FileStorage():
 
     __file_path = "file.json"
     __objects = {}
-    __active_classes = ["BaseModel", "User"]
+    __active_classes = [
+                        "BaseModel", "User", "Place", "State",
+                        "City", "Amenity", "Review"
+                       ]
 
     @property
     def objects(self):
