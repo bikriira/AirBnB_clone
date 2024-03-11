@@ -10,21 +10,33 @@ class FileStorage():
 
     __file_path = "file.json"
     __objects = {}
+    __active_classes = ["BaseModel", "User"]
 
     @property
     def objects(self):
         """Getter for the __objects attribute"""
         return FileStorage.__objects
 
+    @property
+    def active_classes(self):
+        """Getter for the __active_classes attribute"""
+        return FileStorage.__active_classes
+
     def all(self):
         """  returns the dictionary __objects"""
-
         return FileStorage.__objects
 
     def new(self, obj):
         """ sets in __objects the obj with key <obj class name>.id"""
 
-        FileStorage.__objects[f"{obj.__class__.__name__}.{obj.id}"] = obj.to_dict()
+        obj_dict = obj.to_dict()
+        FileStorage.__objects[f"{obj.__class__.__name__}.{obj.id}"] = obj_dict
+
+        # (Not needed, learning purpose)
+        # Fill the __active_classes with the object's classname, if not yet in
+        class_name = obj_dict["__class__"]
+        if class_name not in FileStorage.__active_classes:
+            FileStorage.__active_classes.append(class_name)
 
     def save(self):
         """ serializes __objects to the JSON file (path: __file_path)"""
