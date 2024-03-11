@@ -128,6 +128,8 @@ class HBNBCommand(cmd.Cmd):
 
     def precmd(self, line):
         """Play with user input before onecmd() even know """
+        import re
+
         if line.endswith('.all()'):
             # Extract the class name
             class_name = line.split('.')[0]
@@ -136,6 +138,11 @@ class HBNBCommand(cmd.Cmd):
         elif line.endswith(".count()"):
             class_name = line.split('.')[0]
             return f"count {class_name}"
+        elif "." in line:
+            line_chunks = line.split(".")
+            if line_chunks[1].startswith("show("):
+                match = re.search(r"((?<=\(\")[\d\w-]*)", line)
+                return f"show {line_chunks[0]} {match.group(1)}"
         else:
             return line
 
