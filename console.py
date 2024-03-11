@@ -79,14 +79,19 @@ class HBNBCommand(cmd.Cmd):
         from models import storage
         inputs = shlex.split(line)
         str_list = []
-        class_name = inputs[0] if inputs else "BaseModel"
+        class_name = inputs[0] if inputs else None
 
-        if class_name not in storage.active_classes:
+        if (class_name not in storage.active_classes) and class_name:
             print("** class doesn't exist **")
         else:
             for key, value in storage.all().items():
-                obj = eval(value["__class__"])(**value)
-                str_list.append(str(obj))
+                if class_name is None:
+                    obj = eval(value["__class__"])(**value)
+                    str_list.append(str(obj))
+                else:
+                    if class_name == value["__class__"]:
+                        obj = eval(value["__class__"])(**value)
+                        str_list.append(str(obj))
             print(str_list)
 
     def do_update(self, line):
