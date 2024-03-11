@@ -11,8 +11,8 @@ class City(BaseModel):
     City class inherits from BaseModel.
     """
 
-    self.state_id = ""
-    self.name = ""
+    state_id = ""
+    name = ""
 
     def __init__(self, *args, **kwargs):
         """
