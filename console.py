@@ -79,7 +79,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             for key, value in storage.all().items():
-                obj = eval(inputs[0])(**value)
+                obj = eval(value["__class__"])(**value)
                 str_list.append(str(obj))
             print(str_list)
 
