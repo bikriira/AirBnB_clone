@@ -140,9 +140,11 @@ class HBNBCommand(cmd.Cmd):
             return f"count {class_name}"
         elif "." in line:
             line_chunks = line.split(".")
+            match = re.search(r"((?<=\(\")[\d\w-]*)", line)
             if line_chunks[1].startswith("show("):
-                match = re.search(r"((?<=\(\")[\d\w-]*)", line)
                 return f"show {line_chunks[0]} {match.group(1)}"
+            elif line_chunks[1].startswith("destroy("):
+                return f"destroy {line_chunks[0]} {match.group(1)}"
         else:
             return line
 
