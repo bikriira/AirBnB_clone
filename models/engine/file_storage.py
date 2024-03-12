@@ -28,6 +28,11 @@ class FileStorage():
         return FileStorage.__objects
 
     @property
+    def file_path(self):
+        """ Getters for the __file_path attribute"""
+        return FileStorage.__file_path
+
+    @property
     def active_classes(self):
         """Getter for the __active_classes attribute"""
         return FileStorage.__active_classes

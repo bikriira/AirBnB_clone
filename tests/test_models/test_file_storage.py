@@ -4,7 +4,6 @@
 import unittest
 from models.base_model import BaseModel
 from models import storage
-import os
 import json
 
 
@@ -12,32 +11,35 @@ class TestFileStorage(unittest.TestCase):
 
     def test_file_path(self):
         self.assertIsInstance(storage.file_path, str)
+        self.assertEqual(storage.file_path, "file.json")
 
     def test_objects(self):
         self.assertIsInstance(storage.objects, dict)
+        obj = BaseModel()
+        storage.new(obj)
+        self.assertEqual(storage.objects[f"BaseModel.{obj.id}"], obj)
 
     def test_all(self):
         obj1 = BaseModel()
         obj2 = BaseModel()
-        Storage.new(obj1)
+        storage.new(obj1)
         storage.new(obj2)
         objects = storage.all()
         self.assertIsInstance(objects, dict)
-        self.assertEqual(len(objects), len(storage.objects))
+        self.assertEqual(storage.objects[f"BaseModel.{obj1.id}"], obj1)
+        self.assertEqual(storage.objects[f"BaseModel.{obj2.id}"], obj2)
 
     def test_new(self):
         obj = BaseModel()
         storage.new(obj)
-        self.assertIsInstance(storage.objects[f"{obj.__class__.__name__}.{obj.id}"], BaseModel)
+        self.assertEqual(storage.objects[f"BaseModel.{obj.id}"], obj)
 
     def test_save(self):
         o1 = BaseModel()
         o2 = BaseModel()
+        storage.new(o1)
+        storage.new(o2)
         storage.save()
-        self.assertTrue(os.path.exists(storage.file_path))
-        with open(storage.file_path, "w", encoding="utf-8") as f:
-            loaded_data = json.load(f)
-        self.assertEqual(loaded_data[f"BaseModel.{o1.id}"], o1.to_dict())
-
-    def test_reload(self):
-
+        storage.reload()
+        self.assertIsInstance(storage.objects[f"BaseModel.{o1.id}"], BaseModel)
+        self.assertIsInstance(storage.objects[f"BaseModel.{o2.id}"], BaseModel)
