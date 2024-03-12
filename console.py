@@ -105,7 +105,7 @@ class HBNBCommand(cmd.Cmd):
         if len(inputs) == 0:
             print("** class name missing **")
         elif inputs[0] not in storage.active_classes:
-            print("** class doesn't exist **")
+            print(f"** class doesn't exist **")
         elif len(inputs) < 2:
             print("** instance id missing **")
         elif f"{inputs[0]}.{inputs[1]}" not in storage.objects:
@@ -140,11 +140,18 @@ class HBNBCommand(cmd.Cmd):
             return f"count {class_name}"
         elif "." in line:
             line_chunks = line.split(".")
-            match = re.search(r"((?<=\(\")[\d\w-]*)", line)
+            match = re.search(r"(.(?<=\().*)", line)
+            arg_tuple = eval(match.group(1))
             if line_chunks[1].startswith("show("):
-                return f"show {line_chunks[0]} {match.group(1)}"
+                # If regex returns string resembling tuple with single value,
+                # eval() sees it as string representation not tuple.
+                # so we can simply use {arg_tuple}
+                return f"show {line_chunks[0]} {arg_tuple}"
             elif line_chunks[1].startswith("destroy("):
-                return f"destroy {line_chunks[0]} {match.group(1)}"
+                return f"destroy {line_chunks[0]} {arg_tuple[0]}"
+            elif line_chunks[1].startswith("update("):
+                return f"""update {line_chunks[0]}
+                        {arg_tuple[0]} {arg_tuple[1]} {arg_tuple[2]}"""
         else:
             return line
 
