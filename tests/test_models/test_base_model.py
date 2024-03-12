@@ -7,9 +7,9 @@ from io import StringIO
 import datetime
 import sys
 
+
 class TestBaseModel(unittest.TestCase):
     """ test base model"""
-
 
     def test_init(self):
         my_model = BaseModel()
@@ -19,10 +19,10 @@ class TestBaseModel(unittest.TestCase):
 
     def test_str(self):
         my_model = BaseModel()
-        expected_output = f"[{type(my_model).__name__}] ({my_model.id} {my_model.__dict__}"
-        self.assertEqual(str(my_model), expected_output)
+        ex = f"[{type(my_model).__name__}] ({my_model.id} {my_model.__dict__}"
+        self.assertEqual(str(my_model), ex)
 
-    def test_save_and_print(self):
+    def test_save(self):
         my_model = BaseModel()
         initial_updated_at = my_model.updated_at
         my_model.save()
