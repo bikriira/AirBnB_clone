@@ -3,11 +3,11 @@
 
 import json
 from models.base_model import BaseModel
-from models.user import User 
+from models.user import User
 from models.state import State
-from models.city import City 
+from models.city import City
 from models.place import Place
-from models.user import User 
+from models.user import User
 from models.review import Review
 from models.amenity import Amenity
 
@@ -37,8 +37,8 @@ class FileStorage():
         return FileStorage.__objects
 
     def new(self, obj):
-        """ 
-        stores in __objects the 
+        """
+        stores in __objects the
         object as value and <obj class name>.id as key
         """
         FileStorage.__objects[f"{obj.__class__.__name__}.{obj.id}"] = obj
