@@ -2,7 +2,8 @@
 .*.swp
 
 # Ignore compiled Python files
-*.pyc
+models/engine/pycache/
+file.json
 
 # Ignore log files
 *.log
