@@ -52,8 +52,7 @@ class HBNBCommand(cmd.Cmd):
         elif f"{inputs[0]}.{inputs[1]}" not in storage.objects:
             print("** no instance found **")
         else:
-            obj_dict_repr = storage.objects[f"{inputs[0]}.{inputs[1]}"]
-            obj = eval(inputs[0])(**obj_dict_repr)
+            obj = storage.objects[f"{inputs[0]}.{inputs[1]}"]
             print(str(obj))
 
     def do_destroy(self, line):
@@ -85,13 +84,11 @@ class HBNBCommand(cmd.Cmd):
         if (class_name not in storage.active_classes) and class_name:
             print("** class doesn't exist **")
         else:
-            for key, value in storage.all().items():
+            for key, obj in storage.all().items():
                 if class_name is None:
-                    obj = eval(value["__class__"])(**value)
                     str_list.append(str(obj))
                 else:
-                    if class_name == value["__class__"]:
-                        obj = eval(value["__class__"])(**value)
+                    if class_name == obj.__class__.__name__:
                         str_list.append(str(obj))
             print(str_list)
 
@@ -123,8 +120,7 @@ class HBNBCommand(cmd.Cmd):
             print("** attribute name missing **")
         elif self.is_str_dict(inputs[2]):
             inputs[2] = ast.literal_eval(inputs[2])
-            obj_dict_repr = storage.objects[f"{inputs[0]}.{inputs[1]}"]
-            obj = eval(inputs[0])(**obj_dict_repr)
+            obj = storage.objects[f"{inputs[0]}.{inputs[1]}"]
 
             for key, value in inputs[2].items():
                 try:
@@ -138,13 +134,12 @@ class HBNBCommand(cmd.Cmd):
         elif len(inputs) < 4:
             print("** value missing **")
         else:
-            obj_dict_repr = storage.objects[f"{inputs[0]}.{inputs[1]}"]
-            obj = eval(inputs[0])(**obj_dict_repr)
+            obj = storage.objects[f"{inputs[0]}.{inputs[1]}"]
             try:
-                curr_value = getattr(obj, f"{inputs[2]}")
-                setattr(obj, f"{inputs[2]}", type(curr_value)(inputs[3]))
+                curr_value = getattr(obj, inputs[2])
+                setattr(obj, inputs[2], type(curr_value)(inputs[3]))
             except AttributeError:
-                setattr(obj, f"{inputs[2]}", inputs[3])
+                setattr(obj, inputs[2], inputs[3])
             self.do_destroy(f"{inputs[0]} {obj.id}")
             storage.new(obj)
             obj.save()
@@ -181,6 +176,14 @@ class HBNBCommand(cmd.Cmd):
         else:
             return line
 
+    def do_count(self, line):
+        from models import storage
+        count = 0
+        for key, obj in storage.objects.items():
+            if (obj.__class__.__name__ == line):
+                count += 1
+        print(count)
+
     def emptyline(self):
         """Handle an empty line input"""
         pass
@@ -192,14 +195,6 @@ class HBNBCommand(cmd.Cmd):
     def do_quit(self, line):
         """Usually Ctrl+D on Unix-like systems and Ctrl+Z on Windows"""
         return True
-
-    def do_count(self, line):
-        from models import storage
-        count = 0
-        for key, value in storage.objects.items():
-            if (value["__class__"] == line):
-                count += 1
-        print(count)
 
 
 if __name__ == '__main__':

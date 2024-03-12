@@ -37,22 +37,19 @@ class FileStorage():
         return FileStorage.__objects
 
     def new(self, obj):
-        """ sets in __objects the obj with key <obj class name>.id"""
-
-        obj_dict = obj.to_dict()
-        FileStorage.__objects[f"{obj.__class__.__name__}.{obj.id}"] = obj_dict
-
-        # (Not needed, learning purpose)
-        # Fill the __active_classes with the object's classname, if not yet in
-        class_name = obj_dict["__class__"]
-        if class_name not in FileStorage.__active_classes:
-            FileStorage.__active_classes.append(class_name)
+        """ 
+        stores in __objects the 
+        object as value and <obj class name>.id as key
+        """
+        FileStorage.__objects[f"{obj.__class__.__name__}.{obj.id}"] = obj
 
     def save(self):
-        """ serializes __objects to the JSON file (path: __file_path)"""
-
+        """Serializes __objects to the JSON file (path: __file_path)"""
         with open(self.__file_path, "w", encoding="utf-8") as file1:
-            json.dump(FileStorage.__objects, file1)
+            serialized_objects = {}
+            for key, obj in FileStorage.__objects.items():
+                serialized_objects[key] = obj.to_dict()
+            json.dump(serialized_objects, file1)
 
     def reload(self):
         """ deserializes the JSON file to __objects"""
