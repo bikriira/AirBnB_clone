@@ -14,8 +14,10 @@ class City(BaseModel):
     state_id = ""
     name = ""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, state_id="State.id", name="", *args, **kwargs):
         """
         Initializes City instance.
         """
         super().__init__(*args, **kwargs)
+        self.state_id = state_id
+        self.name = name
