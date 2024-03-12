@@ -1,9 +1,14 @@
+# Ignore the storage file(file.json)
+file.json
+
 # Ignore vi swap files
 .*.swp
 
 # Ignore compiled Python files
-models/engine/pycache/
-file.json
+__pycache__/
+
+# Ignore Unit tests generate coverage reports
+htmlcov/
 
 # Ignore log files
 *.log
