@@ -3,6 +3,7 @@
 
 # Ignore compiled Python files
 models/engine/pycache/
+file.json
 
 # Ignore log files
 *.log
