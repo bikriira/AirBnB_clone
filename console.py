@@ -1,4 +1,28 @@
 #!/usr/bin/python3
+"""
+This module serves as the command-line interface (CLI) entry point for
+interacting with an AirBnB-like application
+
+Usage:
+- create <class_name>: Create a new instance of the specified class.
+
+- show <class_name> <id> or <class_name>.show(<id>):
+  Display details of the instance identified by the class name and ID.
+
+- destroy <class_name> <id> or <class_name>.destroy(<id>):
+  Remove the instance identified by the class name and ID.
+
+- all <class_name> or <class_name>.all():
+  List all instances of the specified class,
+  but is no <class_name> print all available instances
+
+- update <class_name> <id> <attribute_name> <attribute_value> or
+  <class_name>.update(<id>, <attribute_name>, <attribute_value>):
+  Update the attributes of an instance.
+
+- quit/EOF: Exit the command interpreter.
+"""
+
 import ast
 import datetime
 import cmd
@@ -12,7 +36,6 @@ from models.place import Place
 from models.user import User
 from models.review import Review
 from models.amenity import Amenity
-"""contains the entry point of the command interpreter"""
 
 
 class HBNBCommand(cmd.Cmd):
@@ -177,6 +200,7 @@ class HBNBCommand(cmd.Cmd):
             return line
 
     def do_count(self, line):
+        """Counts all ocurence of class in the object stored"""
         from models import storage
         count = 0
         for key, obj in storage.objects.items():
