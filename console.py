@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import ast
 import datetime
 import cmd
 import shlex
@@ -94,6 +95,14 @@ class HBNBCommand(cmd.Cmd):
                         str_list.append(str(obj))
             print(str_list)
 
+    def is_str_dict(self, str_):
+        """Check if the passed string can be a dictionary"""
+
+        try:
+            return isinstance(ast.literal_eval(str_), dict)
+        except (SyntaxError, ValueError):
+            return False
+
     def do_update(self, line):
         """Updates an instance based on the class name and id,
            by adding or updating attribute
@@ -112,6 +121,20 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
         elif len(inputs) < 3:
             print("** attribute name missing **")
+        elif self.is_str_dict(inputs[2]):
+            inputs[2] = ast.literal_eval(inputs[2])
+            obj_dict_repr = storage.objects[f"{inputs[0]}.{inputs[1]}"]
+            obj = eval(inputs[0])(**obj_dict_repr)
+
+            for key, value in inputs[2].items():
+                try:
+                    curr_value = getattr(obj, key)
+                    setattr(obj, key, type(curr_value)(value))
+                except AttributeError:
+                    setattr(obj, key, value)
+            self.do_destroy(f"{inputs[0]} {obj.id}")
+            storage.new(obj)
+            obj.save()
         elif len(inputs) < 4:
             print("** value missing **")
         else:
@@ -133,7 +156,6 @@ class HBNBCommand(cmd.Cmd):
         if line.endswith('.all()'):
             # Extract the class name
             class_name = line.split('.')[0]
-            # Modify the line to call a custom method
             return f"all {class_name}"
         elif line.endswith(".count()"):
             class_name = line.split('.')[0]
@@ -141,7 +163,8 @@ class HBNBCommand(cmd.Cmd):
         elif "." in line:
             line_chunks = line.split(".")
             match = re.search(r"(.(?<=\().*)", line)
-            arg_tuple = eval(match.group(1))
+            arg_tuple = ast.literal_eval(match.group(1))
+
             # If regex returns string resembling tuple with single value,
             # eval() sees it as string representation not tuple.
             # so we can simply use {arg_tuple} in that case
@@ -151,8 +174,10 @@ class HBNBCommand(cmd.Cmd):
             elif line_chunks[1].startswith("destroy("):
                 return f"destroy {line_chunks[0]} {arg_tuple}"
             elif line_chunks[1].startswith("update("):
+                # value can be inavailable if dictionary used
+                value = "" if len(arg_tuple) < 3 else arg_tuple[2]
                 return f"""update {line_chunks[0]}
-                        {arg_tuple[0]} {arg_tuple[1]} {arg_tuple[2]}"""
+                        {arg_tuple[0]} "{arg_tuple[1]}" {value}"""
         else:
             return line
 
