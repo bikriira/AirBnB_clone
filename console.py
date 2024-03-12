@@ -142,13 +142,14 @@ class HBNBCommand(cmd.Cmd):
             line_chunks = line.split(".")
             match = re.search(r"(.(?<=\().*)", line)
             arg_tuple = eval(match.group(1))
+            # If regex returns string resembling tuple with single value,
+            # eval() sees it as string representation not tuple.
+            # so we can simply use {arg_tuple} in that case
+
             if line_chunks[1].startswith("show("):
-                # If regex returns string resembling tuple with single value,
-                # eval() sees it as string representation not tuple.
-                # so we can simply use {arg_tuple}
                 return f"show {line_chunks[0]} {arg_tuple}"
             elif line_chunks[1].startswith("destroy("):
-                return f"destroy {line_chunks[0]} {arg_tuple[0]}"
+                return f"destroy {line_chunks[0]} {arg_tuple}"
             elif line_chunks[1].startswith("update("):
                 return f"""update {line_chunks[0]}
                         {arg_tuple[0]} {arg_tuple[1]} {arg_tuple[2]}"""
